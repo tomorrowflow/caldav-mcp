@@ -1,12 +1,7 @@
 import { CalDAVClient } from "ts-caldav"
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 
-export async function registerListCalendars(
-  client: CalDAVClient,
-  server: McpServer,
-) {
-  const calendars = await client.getCalendars()
-
+export function registerListCalendars(client: CalDAVClient, server: McpServer) {
   server.registerTool(
     "list-calendars",
     {
@@ -14,6 +9,7 @@ export async function registerListCalendars(
       inputSchema: {},
     },
     async () => {
+      const calendars = await client.getCalendars()
       return { content: [{ type: "text", text: JSON.stringify(calendars) }] }
     },
   )

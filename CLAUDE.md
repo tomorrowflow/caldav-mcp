@@ -35,14 +35,15 @@ node index.js
 
 ## Project Architecture
 
-The codebase is a simple MCP server implementation that:
+The codebase is an MCP server implementation that:
 
 1. Connects to a CalDAV server using credentials from environment variables
-2. Retrieves the user's calendars and uses the first one for operations
-3. Exposes four MCP tools:
-   - `list-calendars`: Lists calendars
-   - `list-events`: Lists events between a start and end time
+2. Exposes five MCP tools:
+   - `list-calendars`: Dynamically lists all calendars (fetched fresh on each call)
+   - `list-events`: Lists events between a start and end time for a specific calendar
+   - `list-all-events`: Lists events across all calendars between a start and end time
    - `create-event`: Creates a calendar event with summary, start, and end time
-   - `delete-event`: Deletes event from a calendar 
+   - `delete-event`: Deletes event from a calendar
+3. Calendar resolution: `list-events`, `create-event`, and `delete-event` accept either `calendarUrl` or `calendarName` (case-insensitive display name match) via the shared `resolveCalendarUrl` helper in `src/tools/resolve-calendar.ts`
 
-The MCP server uses the StdioServerTransport to communicate through stdin/stdout, making it suitable for integration with Claude or other AI assistants that support the Model Context Protocol.
+The MCP server supports both StdioServerTransport (stdin/stdout) and StreamableHTTPServerTransport, configured via the `MCP_TRANSPORT` environment variable. This makes it suitable for integration with Claude or other AI assistants that support the Model Context Protocol.

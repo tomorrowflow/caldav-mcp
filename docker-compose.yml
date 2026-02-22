@@ -1,0 +1,9 @@
+services:
+  caldav-mcp:
+    build: .
+    container_name: caldav-mcp
+    ports:
+      - "${MCP_PORT:-3040}:3040"
+    env_file:
+      - .env
+    restart: unless-stopped

@@ -14,10 +14,12 @@
 ## ✨ Features
 
 - Connect to CalDAV servers
-- List calendars
+- List calendars (fetched dynamically on each call)
 - List calendar events within a specific timeframe
+- List events across all calendars at once
 - Create calendar events
 - Delete calendar events
+- Reference calendars by display name or URL
 
 ## Setup
 
@@ -54,45 +56,64 @@ node dist/index.js
 
 ## Available Tools
 
+All tools that operate on a specific calendar (`list-events`, `create-event`, `delete-event`) accept either `calendarUrl` or `calendarName` to identify the target calendar. When using `calendarName`, the display name is matched case-insensitively.
+
+### list-calendars
+
+Lists all available calendars. Calendars are fetched dynamically on each call.
+
+Parameters: none
+
+Returns:
+- List of all available calendars with name, URL, and metadata
+
+### list-events
+
+Lists events within a specified timeframe for a specific calendar.
+
+Parameters:
+- `start`: Date string - Start of the timeframe
+- `end`: Date string - End of the timeframe
+- `calendarUrl`: String (optional) - The calendar URL
+- `calendarName`: String (optional) - The calendar display name
+
+Returns:
+- A list of events that fall within the given timeframe
+
+### list-all-events
+
+Lists events across all calendars within a specified timeframe.
+
+Parameters:
+- `start`: Date string - Start of the timeframe
+- `end`: Date string - End of the timeframe
+
+Returns:
+- A list of events from all calendars, each tagged with `calendarName` and `calendarUrl`
+
 ### create-event
 
 Creates a new calendar event.
 
 Parameters:
 - `summary`: String - Event title/summary
-- `start`: DateTime string - Event start time
-- `end`: DateTime string - Event end time
+- `start`: DateTime string - Event start time (ISO 8601)
+- `end`: DateTime string - Event end time (ISO 8601)
+- `calendarUrl`: String (optional) - The calendar URL
+- `calendarName`: String (optional) - The calendar display name
+- `recurrenceRule`: Object (optional) - Recurrence rule (supports `freq`, `interval`, `count`, `until`, `byday`, `bymonthday`, `bymonth`)
 
 Returns:
 - The unique ID of the created event
 
-### list-events
-
-Lists events within a specified timeframe.
-
-Parameters:
-- `start`: DateTime string - Start of the timeframe
-- `end`: DateTime string - End of the timeframe
-
-Returns:
-- A list of event summaries that fall within the given timeframe
-
-### list-calendars
-
-Lists all available calendars.
-
-Parameters: none
-
-Returns:
-- List of all available calendars
-
 ### delete-event
 
-Deletes an event in the calendar specified by its URL
+Deletes an event from a calendar.
 
 Parameters:
-- `uid`: string - The UID of the calendar event to delete
-- `calendarUrl`: string - the URL of the calendar event to delete
+- `uid`: String - The UID of the calendar event to delete
+- `calendarUrl`: String (optional) - The calendar URL
+- `calendarName`: String (optional) - The calendar display name
 
 ## License
 
